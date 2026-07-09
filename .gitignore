@@ -1,0 +1,33 @@
+.DS_Store
+*.pem
+
+# Environment
+.env*
+!.env.example
+
+# JavaScript / Next.js
+node_modules/
+.next/
+out/
+build/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.tsbuildinfo
+
+# Local app data
+.data/
+public/uploads/
+
+# Tooling/runtime state
+.gstack/
+.vercel/
+**/supabase/.temp/
+
+# Xcode
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
