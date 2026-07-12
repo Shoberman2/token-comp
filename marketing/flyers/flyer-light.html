@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Burnt flyer — light</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&display=swap');
+  @page { size: letter; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 8.5in; height: 11in; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #ffffff; color: #101014;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 0.55in;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .frame {
+    width: 100%; height: 100%;
+    border: 2.5px solid #101014; border-radius: 18px;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 0.5in 0.5in 0.4in;
+  }
+  .brand { display: flex; align-items: center; gap: 13px; }
+  .brand .word {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 42px;
+    letter-spacing: -0.02em; color: #101014;
+  }
+  h1 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: 68px; line-height: 1.02; letter-spacing: -0.025em;
+    text-align: center; text-transform: uppercase; color: #101014;
+    margin-top: 0.4in;
+  }
+  .sub {
+    margin-top: 0.24in; text-align: center; color: #55555c;
+    font-size: 18.5px; line-height: 1.5; max-width: 6.2in;
+  }
+  .sub b { color: #101014; font-weight: 600; }
+  .qr-tile {
+    margin-top: 0.38in;
+    border: 2.5px solid #101014; border-radius: 24px; padding: 24px 24px 16px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .qr-wrap { position: relative; width: 3in; height: 3in; }
+  .qr-wrap img { width: 100%; height: 100%; display: block; }
+  .qr-badge {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 0.54in; height: 0.54in; background: #ffffff; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .scan {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    color: #101014; font-size: 19px;
+  }
+  .url {
+    margin-top: 0.13in; font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 17px; color: #55555c; letter-spacing: 0.02em;
+  }
+  .foot {
+    margin-top: auto; display: flex; align-items: center; gap: 12px;
+    color: #8b8b93; font-size: 13.5px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .dot { width: 4px; height: 4px; border-radius: 50%; background: #c9c9d1; }
+</style>
+</head>
+<body>
+  <div class="frame">
+
+    <div class="brand">
+      <svg width="60" height="60" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="24" fill="#ffffff" stroke="#101014" stroke-width="3"/>
+        <circle cx="32" cy="32" r="19.8" fill="none" stroke="#101014" stroke-opacity="0.5" stroke-width="1.6" stroke-dasharray="2.4 13.15" stroke-dashoffset="1.2"/>
+        <path d="M32 17.8c1.75 8.4 5.15 11.8 13.3 14.2-8.15 2.4-11.55 5.8-13.3 14.2-1.75-8.4-5.15-11.8-13.3-14.2 8.15-2.4 11.55-5.8 13.3-14.2Z" fill="#101014"/>
+      </svg>
+      <span class="word">Burnt</span>
+    </div>
+
+    <h1>How many tokens did&nbsp;you burn today?</h1>
+
+    <p class="sub">
+      The daily leaderboard for AI builders. Post your usage screenshot,
+      keep your streak, and <b>out-burn your friends</b>.
+    </p>
+
+    <div class="qr-tile">
+      <div class="qr-wrap">
+        <img src="qr.svg" alt="QR code to burnt-delta.vercel.app">
+        <div class="qr-badge">
+          <svg width="42" height="42" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="26" fill="#101014"/>
+            <path d="M32 15c2.1 10.1 6.2 14.2 16 16.7-9.8 2.5-13.9 6.6-16 16.7-2.1-10.1-6.2-14.2-16-16.7 9.8-2.5 13.9-6.6 16-16.7Z" fill="#ffffff"/>
+          </svg>
+        </div>
+      </div>
+      <div class="scan">Scan to start burning</div>
+    </div>
+
+    <div class="url">burnt-delta.vercel.app</div>
+
+    <div class="foot">
+      <span>Web + iPhone</span><span class="dot"></span>
+      <span>Free</span><span class="dot"></span>
+      <span>Made in SF</span>
+    </div>
+
+  </div>
+</body>
+</html>

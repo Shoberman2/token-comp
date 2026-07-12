@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Burnt flyer — dark</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&display=swap');
+  @page { size: letter; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 8.5in; height: 11in; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: radial-gradient(120% 65% at 50% -12%, #232329, #0b0b0d 62%);
+    color: #fafafa;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 0.62in 0.62in 0.5in;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand .word {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 44px;
+    letter-spacing: -0.02em;
+    background: linear-gradient(180deg, #ffffff 0%, #c9c9d1 60%, #9a9aa2 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  h1 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: 74px; line-height: 1.02; letter-spacing: -0.025em;
+    text-align: center; text-transform: uppercase;
+    margin-top: 0.42in;
+    background: linear-gradient(180deg, #ffffff 0%, #cdcdd5 55%, #83838c 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub {
+    margin-top: 0.26in; text-align: center; color: #a9a9b1;
+    font-size: 19px; line-height: 1.5; max-width: 6.4in;
+  }
+  .sub b { color: #fafafa; font-weight: 600; }
+  .qr-tile {
+    margin-top: 0.42in;
+    background: #ffffff; border-radius: 26px; padding: 26px 26px 18px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.14), 0 30px 80px -30px rgba(0,0,0,0.9);
+  }
+  .qr-wrap { position: relative; width: 3.1in; height: 3.1in; }
+  .qr-wrap img { width: 100%; height: 100%; display: block; }
+  .qr-badge {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 0.56in; height: 0.56in; background: #ffffff; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .scan {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    color: #0b0b0d; font-size: 20px; letter-spacing: 0.01em;
+  }
+  .url {
+    margin-top: 0.14in; font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 17px; color: #8b8b93; letter-spacing: 0.02em;
+  }
+  .foot {
+    margin-top: auto; display: flex; align-items: center; gap: 12px;
+    color: #6d6d75; font-size: 14px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .dot { width: 4px; height: 4px; border-radius: 50%; background: #4a4a52; }
+</style>
+</head>
+<body>
+
+  <div class="brand">
+    <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="rim" x1="32" y1="6" x2="32" y2="58" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#ffffff"/><stop offset="1" stop-color="#84848d"/>
+        </linearGradient>
+        <linearGradient id="spark" x1="32" y1="16" x2="32" y2="48" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#ffffff"/><stop offset="1" stop-color="#9a9aa2"/>
+        </linearGradient>
+      </defs>
+      <circle cx="32" cy="32" r="24" fill="#141419" stroke="url(#rim)" stroke-width="2.8"/>
+      <circle cx="32" cy="32" r="19.8" fill="none" stroke="url(#rim)" stroke-opacity="0.45" stroke-width="1.5" stroke-dasharray="2.4 13.15" stroke-dashoffset="1.2"/>
+      <path d="M32 17.8c1.75 8.4 5.15 11.8 13.3 14.2-8.15 2.4-11.55 5.8-13.3 14.2-1.75-8.4-5.15-11.8-13.3-14.2 8.15-2.4 11.55-5.8 13.3-14.2Z" fill="url(#spark)"/>
+    </svg>
+    <span class="word">Burnt</span>
+  </div>
+
+  <h1>How many tokens did&nbsp;you burn today?</h1>
+
+  <p class="sub">
+    The daily leaderboard for AI builders. Post your usage screenshot,
+    keep your streak, and <b>out-burn your friends</b>.
+  </p>
+
+  <div class="qr-tile">
+    <div class="qr-wrap">
+      <img src="qr.svg" alt="QR code to burnt-delta.vercel.app">
+      <div class="qr-badge">
+        <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="26" fill="#0b0b0d"/>
+          <path d="M32 15c2.1 10.1 6.2 14.2 16 16.7-9.8 2.5-13.9 6.6-16 16.7-2.1-10.1-6.2-14.2-16-16.7 9.8-2.5 13.9-6.6 16-16.7Z" fill="#ffffff"/>
+        </svg>
+      </div>
+    </div>
+    <div class="scan">Scan to start burning</div>
+  </div>
+
+  <div class="url">burnt-delta.vercel.app</div>
+
+  <div class="foot">
+    <span>Web + iPhone</span><span class="dot"></span>
+    <span>Free</span><span class="dot"></span>
+    <span>Made in SF</span>
+  </div>
+
+</body>
+</html>
