@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Home, Plus, Trophy, User } from "lucide-react";
 import { Logo } from "./Logo";
 import { StreakChip } from "./StreakChip";
+import { ThemeToggle } from "./ThemeToggle";
 import type { Profile } from "@/lib/types";
 
 const links = [
@@ -35,12 +36,15 @@ export function Nav() {
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-line bg-ink/95 backdrop-blur">
-        <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-4">
+        <div className="relative mx-auto flex h-14 w-full max-w-2xl items-center justify-between px-5">
           <Link href="/" aria-label="Burnt home">
             <Logo size={22} />
           </Link>
 
-          <nav className="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
+          <nav
+            className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex"
+            aria-label="Primary navigation"
+          >
             {links.map((link) => (
               <DesktopLink key={link.href} href={link.href} active={isActive(pathname, link.href)}>
                 {link.label}
@@ -48,17 +52,28 @@ export function Nav() {
             ))}
           </nav>
 
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden items-center gap-2.5 md:flex">
+            <ThemeToggle />
             <StreakChip />
-            <Link
-              href={profile ? "/profile" : "/login"}
-              className="rounded-lg border border-line px-3 py-1.5 text-sm font-semibold text-fog transition hover:text-bone"
-            >
-              {profile ? "Account" : "Sign in"}
-            </Link>
+            {profile ? (
+              <Link
+                href="/profile"
+                className="rounded-(--radius-control) border border-line px-3.5 py-1.5 text-sm font-semibold text-fog transition hover:border-smoke hover:text-bone"
+              >
+                Account
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="rounded-(--radius-control) bg-bone px-3.5 py-1.5 text-sm font-bold text-ink transition hover:opacity-90"
+              >
+                Sign in
+              </Link>
+            )}
           </div>
 
-          <div className="md:hidden">
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
             <StreakChip />
           </div>
         </div>
@@ -66,7 +81,7 @@ export function Nav() {
 
       <nav className="fixed inset-x-0 bottom-0 z-50 md:hidden" aria-label="Mobile navigation">
         <div className="mx-auto max-w-2xl px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-2">
-          <div className="glass-blur grid grid-cols-4 rounded-lg p-1 shadow-[0_10px_32px_-18px_rgba(0,0,0,0.9)]">
+          <div className="glass-blur grid grid-cols-4 rounded-card p-1 shadow-[0_10px_32px_-18px_rgba(0,0,0,0.9)]">
             {links.map((link) => (
               <TabLink
                 key={link.href}
@@ -101,7 +116,7 @@ function DesktopLink({
   return (
     <Link
       href={href}
-      className={`rounded-md px-3 py-1.5 text-sm font-semibold transition ${
+      className={`rounded-(--radius-control) px-3 py-1.5 text-sm font-semibold transition ${
         active ? "bg-panel-2 text-bone" : "text-fog hover:text-bone"
       }`}
     >
@@ -124,7 +139,7 @@ function TabLink({
   return (
     <Link
       href={href}
-      className={`flex h-14 flex-col items-center justify-center gap-0.5 rounded-md text-[10px] font-semibold transition-colors ${
+      className={`flex h-14 flex-col items-center justify-center gap-0.5 rounded-[12px] text-[10px] font-semibold transition-colors ${
         active ? "bg-bone text-ink" : "text-dim hover:text-fog"
       }`}
     >

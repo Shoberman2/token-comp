@@ -19,7 +19,7 @@ export function StreakChip() {
 
   return (
     <span
-      className={`lit flex items-center gap-1.5 rounded-lg bg-panel px-3 py-1.5 text-xs font-bold text-bone ${
+      className={`lit flex items-center gap-1.5 rounded-full bg-panel px-3 py-1.5 text-xs font-bold text-bone ${
         me.postedToday ? "" : "opacity-80"
       }`}
       title={me.postedToday ? "Streak locked in for today" : "Post today to keep your streak"}

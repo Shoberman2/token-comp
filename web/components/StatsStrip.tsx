@@ -22,13 +22,13 @@ export function StatsStrip() {
   ];
 
   return (
-    <div className="glass grid grid-cols-3 divide-x divide-line rounded-lg py-3">
+    <div className="glass grid grid-cols-3 divide-x divide-line rounded-card py-4">
       {items.map(([label, value]) => (
-        <div key={label} className="flex flex-col items-center gap-0.5 px-1">
-          <div className="font-display text-xl font-bold">
+        <div key={label} className="flex flex-col items-center gap-1 px-1">
+          <div className="font-display text-[22px] font-bold leading-none tabular">
             <Counter className="silver" value={value} />
           </div>
-          <div className="text-[10px] uppercase tracking-wide text-dim">{label}</div>
+          <div className="text-[10px] uppercase tracking-[0.14em] text-dim">{label}</div>
         </div>
       ))}
     </div>

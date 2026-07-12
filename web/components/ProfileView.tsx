@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Copy, ExternalLink, Trophy } from "lucide-react";
 import { Avatar } from "./Avatar";
 import { FollowButton } from "./FollowButton";
+import { NudgeButton } from "./NudgeButton";
 import { Counter } from "./Counter";
 import { compact } from "@/lib/format";
 import type { Profile } from "@/lib/types";
@@ -45,7 +46,7 @@ export function ProfileView({ handle }: { handle?: string }) {
 
   if (!target) {
     return (
-      <div className="glass rounded-lg p-5">
+      <div className="glass rounded-card p-5">
         <Link href="/login?next=/profile" className="font-semibold text-bone underline underline-offset-4">
           Sign in to view your profile
         </Link>
@@ -54,10 +55,10 @@ export function ProfileView({ handle }: { handle?: string }) {
   }
 
   if (missing) {
-    return <div className="glass rounded-lg p-5 text-sm text-fog">Profile not found.</div>;
+    return <div className="glass rounded-card p-5 text-sm text-fog">Profile not found.</div>;
   }
 
-  if (!data) return <div className="h-64 animate-pulse rounded-lg bg-ash" />;
+  if (!data) return <div className="h-64 animate-pulse rounded-card bg-ash" />;
 
   const p = data.profile;
 
@@ -85,16 +86,19 @@ export function ProfileView({ handle }: { handle?: string }) {
 
         <div className="flex items-center gap-2">
           {data.isSelf ? (
-            <Link href="/profile" className="rounded-lg bg-bone px-4 py-2 text-sm font-bold text-ink">
+            <Link href="/profile" className="rounded-(--radius-control) bg-bone px-4 py-2 text-sm font-bold text-ink">
               Edit profile
             </Link>
           ) : (
-            <FollowButton handle={p.handle} initialFollowing={data.isFollowing} onChange={load} />
+            <>
+              <FollowButton handle={p.handle} initialFollowing={data.isFollowing} onChange={load} />
+              {data.isFollowing && !p.postedToday ? <NudgeButton handle={p.handle} /> : null}
+            </>
           )}
           <button
             type="button"
             onClick={copyProfile}
-            className="grid h-9 w-9 place-items-center rounded-lg border border-line text-fog"
+            className="grid h-9 w-9 place-items-center rounded-(--radius-control) border border-line text-fog"
             aria-label="Copy profile link"
           >
             <Copy size={15} />
@@ -106,12 +110,12 @@ export function ProfileView({ handle }: { handle?: string }) {
       {copied ? <div className="text-xs text-fog">Profile link copied.</div> : null}
 
       {p.rank ? (
-        <div className="glass inline-flex w-fit items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-bone">
+        <div className="glass inline-flex w-fit items-center gap-1.5 rounded-(--radius-control) px-3 py-1.5 text-xs font-semibold text-bone">
           <Trophy size={13} /> #{p.rank} all-time
         </div>
       ) : null}
 
-      <div className="glass grid grid-cols-2 divide-x divide-y divide-line rounded-lg py-3 sm:grid-cols-4 sm:divide-y-0">
+      <div className="glass grid grid-cols-2 divide-x divide-y divide-line rounded-card py-4 sm:grid-cols-4 sm:divide-y-0">
         <Stat label="streak" value={p.streak} />
         <Stat label="burned" value={p.totalTokens} />
         <Stat label="burns" value={p.posts} />
@@ -134,7 +138,7 @@ export function ProfileView({ handle }: { handle?: string }) {
           {p.posts > 0 ? "Burns" : "No burns yet"}
         </div>
         {p.burns.length === 0 ? (
-          <div className="glass rounded-lg px-6 py-10 text-center text-sm text-fog">
+          <div className="glass rounded-card px-6 py-12 text-center text-sm text-fog">
             {data.isSelf ? (
               <Link href="/post" className="font-semibold text-bone underline underline-offset-4">
                 Post your first burn
@@ -146,13 +150,13 @@ export function ProfileView({ handle }: { handle?: string }) {
         ) : (
           <div className="grid grid-cols-3 gap-2">
             {p.burns.map((b) => (
-              <div key={b.id} className="relative aspect-square overflow-hidden rounded-lg lit">
+              <Link key={b.id} href={`/b/${b.id}`} className="relative aspect-square overflow-hidden rounded-[10px] lit">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={b.imageUrl} alt="" className="h-full w-full object-cover" />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent px-2 py-1.5">
                   <div className="font-display text-sm font-bold silver">{compact(b.tokens)}</div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

@@ -14,8 +14,9 @@ export function Avatar({
   className?: string;
 }) {
   const text = initials(name || handle || "?");
+  const isImage = !!src && (src.startsWith("http") || src.startsWith("/") || src.startsWith("data:"));
 
-  if (src) {
+  if (isImage) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
@@ -35,7 +36,7 @@ export function Avatar({
         width: size,
         height: size,
         fontSize: Math.round(size * 0.36),
-        background: "linear-gradient(160deg, #2a2a31, #131316)",
+        background: "linear-gradient(160deg, var(--smoke), var(--panel))",
       }}
       aria-hidden
     >

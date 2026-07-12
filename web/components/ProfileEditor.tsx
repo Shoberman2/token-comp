@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Camera, Copy, Loader2, LogOut, Save } from "lucide-react";
 import { Avatar } from "./Avatar";
 import { ModelSelect } from "./ModelSelect";
+import { OrgSection } from "./OrgSection";
 import { compact } from "@/lib/format";
 import { BASE_MODELS } from "@/lib/models";
 import { createClient, isBrowserSupabaseConfigured } from "@/lib/supabase/client";
@@ -87,6 +88,10 @@ export function ProfileEditor() {
 
   async function uploadAvatar(file: File | null) {
     if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Profile image is too large (max 5MB).");
+      return;
+    }
     setUploading(true);
     setError(null);
 
@@ -154,21 +159,21 @@ export function ProfileEditor() {
 
   if (!configured) {
     return (
-      <div className="glass flex flex-col gap-3 rounded-lg p-5 text-sm text-fog">
+      <div className="glass flex flex-col gap-3 rounded-card p-5 text-sm text-fog">
         <h1 className="font-display text-2xl font-bold text-bone">Supabase setup needed</h1>
         <p>Add the public Supabase URL and publishable key, then run the included migration.</p>
       </div>
     );
   }
 
-  if (loading) return <div className="h-64 animate-pulse rounded-lg bg-ash" />;
+  if (loading) return <div className="h-64 animate-pulse rounded-card bg-ash" />;
 
   if (needsAuth) {
     return (
-      <div className="glass flex flex-col gap-4 rounded-lg p-5">
+      <div className="glass flex flex-col gap-4 rounded-card p-5">
         <h1 className="font-display text-2xl font-bold">Sign in to edit your profile</h1>
         <p className="text-sm text-fog">Accounts are backed by Supabase Auth, so your posts and profile stay tied to you.</p>
-        <Link href="/login?next=/profile" className="inline-flex w-fit rounded-lg bg-bone px-4 py-2.5 text-sm font-bold text-ink">
+        <Link href="/login?next=/profile" className="inline-flex w-fit rounded-(--radius-control) bg-bone px-4 py-2.5 text-sm font-bold text-ink">
           Sign in or create account
         </Link>
       </div>
@@ -176,7 +181,7 @@ export function ProfileEditor() {
   }
 
   if (!profile) {
-    return <div className="glass rounded-lg p-5 text-sm text-fog">{error || "Could not load profile."}</div>;
+    return <div className="glass rounded-card p-5 text-sm text-fog">{error || "Could not load profile."}</div>;
   }
 
   return (
@@ -207,17 +212,17 @@ export function ProfileEditor() {
         </div>
       </section>
 
-      <section className="glass grid grid-cols-2 gap-0 divide-x divide-line rounded-lg py-4 text-center sm:grid-cols-4">
+      <section className="glass grid grid-cols-2 gap-0 divide-x divide-line rounded-card py-4 text-center sm:grid-cols-4">
         <Stat label="Total tokens" value={profile.totalTokens} />
         <Stat label="Burns" value={profile.posts} />
         <Stat label="Best day" value={profile.bestDayTokens} />
         <Stat label="Streak" value={profile.streak} />
       </section>
 
-      <section className="glass flex flex-col gap-4 rounded-lg p-4">
+      <section className="glass flex flex-col gap-4 rounded-card p-5">
         <div className="grid gap-3 sm:grid-cols-2">
           <Field label="Handle">
-            <div className="lit flex items-center rounded-lg bg-ink/70 px-3 py-3">
+            <div className="lit flex items-center rounded-(--radius-control) bg-ink/70 px-3 py-3">
               <span className="text-fog">@</span>
               <input
                 value={handle}
@@ -231,7 +236,7 @@ export function ProfileEditor() {
             <input
               value={displayName}
               onChange={(event) => setDisplayName(event.target.value)}
-              className="lit w-full rounded-lg bg-ink/70 px-3 py-3 text-sm outline-none"
+              className="lit w-full rounded-(--radius-control) bg-ink/70 px-3 py-3 text-sm outline-none"
             />
           </Field>
         </div>
@@ -240,7 +245,7 @@ export function ProfileEditor() {
           <input
             value={company}
             onChange={(event) => setCompany(event.target.value)}
-            className="lit w-full rounded-lg bg-ink/70 px-3 py-3 text-sm outline-none"
+            className="lit w-full rounded-(--radius-control) bg-ink/70 px-3 py-3 text-sm outline-none"
           />
         </Field>
 
@@ -248,7 +253,7 @@ export function ProfileEditor() {
           <input
             value={website}
             onChange={(event) => setWebsite(event.target.value)}
-            className="lit w-full rounded-lg bg-ink/70 px-3 py-3 text-sm outline-none"
+            className="lit w-full rounded-(--radius-control) bg-ink/70 px-3 py-3 text-sm outline-none"
           />
         </Field>
 
@@ -257,7 +262,7 @@ export function ProfileEditor() {
             value={bio}
             onChange={(event) => setBio(event.target.value.slice(0, 220))}
             rows={3}
-            className="lit w-full resize-none rounded-lg bg-ink/70 px-3 py-3 text-sm outline-none"
+            className="lit w-full resize-none rounded-(--radius-control) bg-ink/70 px-3 py-3 text-sm outline-none"
           />
         </Field>
 
@@ -265,14 +270,14 @@ export function ProfileEditor() {
           <ModelSelect value={defaultModel} onChange={setDefaultModel} />
         </Field>
 
-        {error ? <p className="rounded-lg bg-white/10 px-3 py-2 text-sm text-bone">{error}</p> : null}
+        {error ? <p className="rounded-(--radius-control) bg-bone/10 px-3 py-2 text-sm text-bone">{error}</p> : null}
 
         <div className="flex flex-col gap-2 sm:flex-row">
           <button
             type="button"
             disabled={saving || handle.length < 3 || !displayName.trim()}
             onClick={save}
-            className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-bone px-4 py-3 text-sm font-bold text-ink disabled:opacity-40"
+            className="inline-flex flex-1 items-center justify-center gap-2 rounded-(--radius-control) bg-bone px-4 py-3 text-sm font-bold text-ink disabled:opacity-40"
           >
             {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             Save profile
@@ -280,7 +285,7 @@ export function ProfileEditor() {
           <button
             type="button"
             onClick={signOut}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-line px-4 py-3 text-sm font-semibold text-fog"
+            className="inline-flex items-center justify-center gap-2 rounded-(--radius-control) border border-line px-4 py-3 text-sm font-semibold text-fog"
           >
             <LogOut size={16} />
             Sign out
@@ -288,12 +293,18 @@ export function ProfileEditor() {
         </div>
       </section>
 
-      <section className="glass flex flex-col gap-3 rounded-lg p-4">
+      <section className="glass flex flex-col gap-3 rounded-card p-5">
         <h2 className="font-display text-lg font-bold">Share</h2>
         <ShareRow label="Public profile" value={publicUrl} onCopy={() => copy(publicUrl, "profile")} />
-        <ShareRow label="Join link" value={joinUrl} onCopy={() => copy(joinUrl, "join")} />
+        <ShareRow label="Friend invite link" value={joinUrl} onCopy={() => copy(joinUrl, "join")} />
         {copied ? <p className="text-xs text-fog">Copied {copied} link.</p> : null}
+        <p className="text-xs text-dim">
+          Anyone who joins with your invite link automatically becomes your friend — you follow
+          each other and can nudge each other to post.
+        </p>
       </section>
+
+      <OrgSection />
     </div>
   );
 }
@@ -327,7 +338,7 @@ function ShareRow({ label, value, onCopy }: { label: string; value: string; onCo
         type="button"
         disabled={!value}
         onClick={onCopy}
-        className="grid h-9 w-9 place-items-center rounded-lg border border-line text-fog disabled:opacity-40"
+        className="grid h-9 w-9 place-items-center rounded-(--radius-control) border border-line text-fog disabled:opacity-40"
         aria-label={`Copy ${label}`}
       >
         <Copy size={15} />

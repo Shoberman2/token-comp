@@ -54,7 +54,7 @@ export function ModelSelect({
             onChange(next);
           }
         }}
-        className={`lit w-full rounded-lg bg-ink/70 px-3 text-sm outline-none ${
+        className={`lit w-full rounded-(--radius-control) bg-ink/70 px-3 text-sm outline-none ${
           compact ? "py-2" : "py-3"
         }`}
       >
@@ -75,7 +75,7 @@ export function ModelSelect({
             onChange(next);
           }}
           placeholder="Type the model name"
-          className="lit w-full rounded-lg bg-ink/70 px-3 py-3 text-sm outline-none placeholder:text-smoke"
+          className="lit w-full rounded-(--radius-control) bg-ink/70 px-3 py-3 text-sm outline-none placeholder:text-smoke"
         />
       ) : null}
     </div>

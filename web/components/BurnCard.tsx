@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { compact, usd, timeAgo, estimateCost } from "@/lib/format";
 import { Avatar } from "./Avatar";
+import { ShareButton } from "./ShareButton";
 import type { Burn } from "@/lib/types";
 
 export function BurnCard({ burn, index = 0 }: { burn: Burn; index?: number }) {
@@ -14,7 +15,7 @@ export function BurnCard({ burn, index = 0 }: { burn: Burn; index?: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ delay: Math.min(index, 6) * 0.04, ease: [0.22, 1, 0.36, 1] }}
-      className="glass overflow-hidden rounded-lg"
+      className="glass card-hover overflow-hidden rounded-card"
     >
       <Link href={`/u/${burn.handle}`} className="flex items-center gap-3 px-4 py-3">
         <Avatar name={burn.displayName} handle={burn.handle} src={burn.avatarUrl} size={36} />
@@ -26,12 +27,16 @@ export function BurnCard({ burn, index = 0 }: { burn: Burn; index?: number }) {
       </Link>
 
       {/* The screenshot is the hero */}
-      <div className="relative overflow-hidden border-y border-line bg-ink">
+      <Link
+        href={`/b/${burn.id}`}
+        aria-label={`Open ${burn.displayName}'s burn`}
+        className="relative block overflow-hidden border-y border-line bg-ink"
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={burn.imageUrl}
           alt={`${burn.displayName}'s token usage`}
-          className="aspect-[4/5] w-full object-cover"
+          className="aspect-[4/5] w-full object-cover sm:aspect-[4/3]"
           loading="lazy"
         />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
@@ -48,7 +53,7 @@ export function BurnCard({ burn, index = 0 }: { burn: Burn; index?: number }) {
             </span>
           ) : null}
         </div>
-      </div>
+      </Link>
 
       {burn.caption ? (
         <p className="px-4 py-3 text-sm">
@@ -56,8 +61,19 @@ export function BurnCard({ burn, index = 0 }: { burn: Burn; index?: number }) {
           <span className="text-fog">{burn.caption}</span>
         </p>
       ) : (
-        <div className="h-3" />
+        <div className="h-1" />
       )}
+
+      <div className="flex items-center justify-between gap-3 border-t border-line px-4 py-2.5">
+        <Link href={`/b/${burn.id}`} className="text-xs font-semibold text-fog transition hover:text-bone">
+          View daily burn
+        </Link>
+        <ShareButton
+          path={`/b/${burn.id}`}
+          title={`${burn.displayName}'s daily burn`}
+          text={`@${burn.handle} burned ${compact(burn.tokens)} AI tokens today.`}
+        />
+      </div>
     </motion.article>
   );
 }

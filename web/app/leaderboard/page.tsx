@@ -1,5 +1,6 @@
 import { Leaderboard } from "@/components/Leaderboard";
 import { StatsStrip } from "@/components/StatsStrip";
+import { PageHeader } from "@/components/PageHeader";
 
 export const metadata = {
   title: "Leaderboard — Burnt",
@@ -8,13 +9,8 @@ export const metadata = {
 export default function LeaderboardPage() {
   return (
     <div className="flex flex-col gap-6">
-      <section className="rise flex flex-col gap-1 pt-2">
-        <h1 className="font-display text-2xl font-bold">Leaderboard</h1>
-        <p className="text-sm text-fog">Ranked by verified token usage posts.</p>
-      </section>
-
+      <PageHeader title="Leaderboard" sub="Ranked by verified token usage posts" />
       <StatsStrip />
-
       <Leaderboard />
     </div>
   );

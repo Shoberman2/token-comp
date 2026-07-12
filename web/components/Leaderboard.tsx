@@ -108,7 +108,7 @@ function Podium({ top3 }: { top3: RankEntry[] }) {
           transition={{ delay: 0.05 + i * 0.08, type: "spring", stiffness: 260, damping: 22 }}
         >
           <div
-            className={`relative w-full overflow-hidden rounded-lg lit ${heights.get(e.handle) ?? "h-48"}`}
+            className={`card-hover relative w-full overflow-hidden rounded-card lit ${heights.get(e.handle) ?? "h-48"}`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -144,10 +144,10 @@ function Row({ e, pct, delay }: { e: RankEntry; pct: number; delay: number }) {
       initial={{ opacity: 0, x: -8 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay }}
-      className="glass relative overflow-hidden rounded-lg"
+      className="glass card-hover relative overflow-hidden rounded-card"
     >
       <div
-        className="absolute inset-y-0 left-0 bg-white/[0.05]"
+        className="absolute inset-y-0 left-0 bg-bone/[0.05]"
         style={{ width: `${Math.max(6, pct)}%` }}
       />
       <Link href={`/u/${e.handle}`} className="relative flex items-center gap-3 p-2.5">
@@ -156,7 +156,7 @@ function Row({ e, pct, delay }: { e: RankEntry; pct: number; delay: number }) {
         <img
           src={e.imageUrl}
           alt=""
-          className="h-12 w-10 shrink-0 rounded-lg object-cover lit"
+          className="h-12 w-10 shrink-0 rounded-[10px] object-cover lit"
         />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
@@ -186,12 +186,12 @@ function LoadingState() {
   return (
     <div className="flex flex-col gap-3">
       <div className="grid grid-cols-3 items-end gap-2.5">
-        <div className="h-52 animate-pulse rounded-lg bg-ash" />
-        <div className="h-60 animate-pulse rounded-lg bg-ash" />
-        <div className="h-48 animate-pulse rounded-lg bg-ash" />
+        <div className="h-52 animate-pulse rounded-card bg-ash" />
+        <div className="h-60 animate-pulse rounded-card bg-ash" />
+        <div className="h-48 animate-pulse rounded-card bg-ash" />
       </div>
       {Array.from({ length: 5 }).map((_, i) => (
-        <div key={i} className="h-[68px] animate-pulse rounded-lg bg-ash" />
+        <div key={i} className="h-[68px] animate-pulse rounded-card bg-ash" />
       ))}
     </div>
   );
@@ -199,7 +199,7 @@ function LoadingState() {
 
 function EmptyState() {
   return (
-    <div className="glass flex flex-col items-center gap-3 rounded-lg px-6 py-12 text-center">
+    <div className="glass flex flex-col items-center gap-3 rounded-card px-6 py-16 text-center">
       <p className="text-sm text-fog">Nobody&apos;s posted a burn in this window yet.</p>
       <Link href="/post" className="font-display text-sm font-bold text-bone underline underline-offset-4">
         Be the first

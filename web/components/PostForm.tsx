@@ -7,7 +7,7 @@ import { Camera, ImagePlus, Loader2, Plus, X } from "lucide-react";
 import { motion } from "motion/react";
 import { compact, estimateCost, usd } from "@/lib/format";
 import { BASE_MODELS } from "@/lib/models";
-import type { Profile } from "@/lib/types";
+import type { Burn, Profile } from "@/lib/types";
 import { ModelSelect } from "./ModelSelect";
 
 export function PostForm() {
@@ -62,6 +62,15 @@ export function PostForm() {
 
   function pickFile(f: File | null) {
     if (!f) return;
+    const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/heic", "image/heif"];
+    if (!allowed.includes(f.type)) {
+      setError("Use a JPG, PNG, WebP, GIF, HEIC, or HEIF image.");
+      return;
+    }
+    if (f.size > 12 * 1024 * 1024) {
+      setError("Image is too large (max 12MB).");
+      return;
+    }
     if (preview) URL.revokeObjectURL(preview);
     setFile(f);
     setPreview(URL.createObjectURL(f));
@@ -91,8 +100,8 @@ export function PostForm() {
         const d = await res.json().catch(() => ({}));
         throw new Error(d.error || "Something went wrong.");
       }
-      router.push("/");
-      router.refresh();
+      const data = (await res.json()) as { burn: Burn };
+      router.push(`/b/${data.burn.id}?posted=1`);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong.");
       setSubmitting(false);
@@ -100,15 +109,15 @@ export function PostForm() {
   }
 
   if (checkingAuth) {
-    return <div className="h-64 animate-pulse rounded-lg bg-ash" />;
+    return <div className="h-64 animate-pulse rounded-card bg-ash" />;
   }
 
   if (authRequired) {
     return (
-      <div className="glass flex flex-col gap-4 rounded-lg p-5">
+      <div className="glass flex flex-col gap-4 rounded-card p-5">
         <h2 className="font-display text-xl font-bold">Sign in to post</h2>
         <p className="text-sm text-fog">Burns are attached to real Supabase accounts with profile information.</p>
-        <Link href="/login?next=/post" className="inline-flex w-fit rounded-lg bg-bone px-4 py-2.5 text-sm font-bold text-ink">
+        <Link href="/login?next=/post" className="inline-flex w-fit rounded-(--radius-control) bg-bone px-4 py-2.5 text-sm font-bold text-ink">
           Sign in or create account
         </Link>
       </div>
@@ -127,7 +136,7 @@ export function PostForm() {
       />
 
       {preview ? (
-        <div className="glass relative overflow-hidden rounded-lg">
+        <div className="glass relative overflow-hidden rounded-card">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={preview} alt="Your usage screenshot" className="max-h-[54vh] w-full object-contain" />
           <button
@@ -135,7 +144,7 @@ export function PostForm() {
               setFile(null);
               setPreview(null);
             }}
-            className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-lg bg-black/70 text-white backdrop-blur"
+            className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-(--radius-control) bg-black/70 text-white backdrop-blur"
             aria-label="Remove image"
           >
             <X size={18} />
@@ -144,9 +153,9 @@ export function PostForm() {
       ) : (
         <button
           onClick={() => fileRef.current?.click()}
-          className="glass lit flex aspect-[4/3] flex-col items-center justify-center gap-3 rounded-lg text-center transition active:scale-[0.99]"
+          className="glass lit flex aspect-[4/3] flex-col items-center justify-center gap-3 rounded-card text-center transition active:scale-[0.99]"
         >
-          <div className="grid h-14 w-14 place-items-center rounded-lg bg-bone text-ink">
+          <div className="grid h-14 w-14 place-items-center rounded-(--radius-control) bg-bone text-ink">
             <Camera size={28} />
           </div>
           <div className="font-display text-lg font-bold">Upload usage screenshot</div>
@@ -157,7 +166,7 @@ export function PostForm() {
       )}
 
       <Field label="Tokens used today" required>
-        <div className="glass lit flex items-center rounded-lg px-4 py-3">
+        <div className="glass lit flex items-center rounded-(--radius-control) px-4 py-3">
           <input
             inputMode="numeric"
             value={tokens}
@@ -185,7 +194,7 @@ export function PostForm() {
           onChange={(e) => setCaption(e.target.value.slice(0, 180))}
           rows={2}
           placeholder="What were you building?"
-          className="glass lit w-full resize-none rounded-lg px-4 py-3 text-sm outline-none placeholder:text-smoke"
+          className="glass lit w-full resize-none rounded-(--radius-control) px-4 py-3 text-sm outline-none placeholder:text-smoke"
         />
       </Field>
 
@@ -193,7 +202,7 @@ export function PostForm() {
         <motion.p
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-lg bg-white/10 px-4 py-3 text-sm text-bone"
+          className="rounded-(--radius-control) bg-bone/10 px-4 py-3 text-sm text-bone"
         >
           {error}
         </motion.p>
@@ -202,7 +211,7 @@ export function PostForm() {
       <button
         disabled={!canSubmit}
         onClick={submit}
-        className="flex items-center justify-center gap-2 rounded-lg bg-bone py-4 font-display text-base font-bold text-ink transition active:scale-[0.99] disabled:opacity-40"
+        className="flex items-center justify-center gap-2 rounded-(--radius-control) bg-bone py-4 font-display text-base font-bold text-ink transition active:scale-[0.99] disabled:opacity-40"
       >
         {submitting ? (
           <>

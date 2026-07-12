@@ -46,7 +46,7 @@ export function FollowButton({
     <button
       onClick={toggle}
       disabled={busy}
-      className={`inline-flex items-center gap-1 rounded-lg font-semibold transition ${pad} ${
+      className={`inline-flex items-center gap-1 rounded-(--radius-control) font-semibold transition ${pad} ${
         following ? "glass text-fog" : "bg-bone text-ink"
       }`}
     >
