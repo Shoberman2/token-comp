@@ -2,17 +2,85 @@ import SwiftUI
 
 // MARK: - Logo
 
-struct FlameLogo: View {
+/// The Burnt "AI token" mark: a minted coin with rim ticks and a four-point spark.
+struct TokenMark: View {
+    var size: CGFloat = 24
+    var body: some View {
+        ZStack {
+            Circle().fill(Palette.panel)
+            Circle().strokeBorder(LinearGradient.silver, lineWidth: size * 0.09)
+            Circle()
+                .inset(by: size * 0.17)
+                .stroke(
+                    Palette.fog.opacity(0.5),
+                    style: StrokeStyle(lineWidth: size * 0.045, dash: [size * 0.05, size * 0.26])
+                )
+            Image(systemName: "sparkle")
+                .font(.system(size: size * 0.42, weight: .bold))
+                .foregroundStyle(LinearGradient.silver)
+        }
+        .frame(width: size, height: size)
+    }
+}
+
+struct TokenLogo: View {
     var size: CGFloat = 24
     var body: some View {
         HStack(spacing: 6) {
-            Image(systemName: "flame.fill")
-                .font(.system(size: size))
-                .foregroundStyle(LinearGradient.silver)
+            TokenMark(size: size * 1.1)
             Text("Burnt")
                 .font(.display(size, .bold))
                 .foregroundStyle(Palette.bone)
         }
+    }
+}
+
+struct AvatarView: View {
+    let name: String
+    let source: String?
+    var size: CGFloat = 40
+
+    var body: some View {
+        Group {
+            if let source, source.hasPrefix("http"), let url = URL(string: source) {
+                AsyncImage(url: url) { phase in
+                    if case .success(let image) = phase {
+                        image.resizable().scaledToFill()
+                    } else {
+                        fallback
+                    }
+                }
+            } else if let source, !source.isEmpty {
+                Text(source).font(.system(size: size * 0.48))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Palette.ash)
+            } else {
+                fallback
+            }
+        }
+        .frame(width: size, height: size)
+        .clipShape(Circle())
+        .overlay(Circle().strokeBorder(Palette.line))
+    }
+
+    private var fallback: some View {
+        Text(initials)
+            .font(.display(size * 0.34, .semibold))
+            .foregroundStyle(Palette.bone)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(LinearGradient(
+                colors: [Palette.smoke, Palette.panel],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ))
+    }
+
+    private var initials: String {
+        let parts = name.split { $0 == " " || $0 == "_" }
+        if parts.count > 1 {
+            return String(parts[0].prefix(1) + parts[1].prefix(1)).uppercased()
+        }
+        return String(name.prefix(2)).uppercased()
     }
 }
 

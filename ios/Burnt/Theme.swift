@@ -1,22 +1,28 @@
 import SwiftUI
+import UIKit
 
+/// Adaptive palette — mirrors the web app's dark/light theme tokens.
 enum Palette {
-    static let ink = Color(hex: 0x09090B)
-    static let ink2 = Color(hex: 0x0D0D10)
-    static let panel = Color(hex: 0x131316)
-    static let panel2 = Color(hex: 0x17171B)
-    static let ash = Color(hex: 0x1C1C21)
-    static let smoke = Color(hex: 0x2A2A31)
-    static let fog = Color(hex: 0x8B8B93)
-    static let dim = Color(hex: 0x5B5B61)
-    static let bone = Color(hex: 0xFAFAFA)
-    static let line = Color.white.opacity(0.10)
+    static let ink = Color(light: 0xF6F6F7, dark: 0x09090B)
+    static let ink2 = Color(light: 0xFFFFFF, dark: 0x0D0D10)
+    static let panel = Color(light: 0xFFFFFF, dark: 0x131316)
+    static let panel2 = Color(light: 0xEDEDF0, dark: 0x17171B)
+    static let ash = Color(light: 0xE6E6EA, dark: 0x1C1C21)
+    static let smoke = Color(light: 0xD5D5DB, dark: 0x2A2A31)
+    static let fog = Color(light: 0x55555C, dark: 0x8B8B93)
+    static let dim = Color(light: 0x8B8B93, dark: 0x5B5B61)
+    static let bone = Color(light: 0x101014, dark: 0xFAFAFA)
+    static let line = Color(light: 0x09090B, dark: 0xFFFFFF, lightAlpha: 0.12, darkAlpha: 0.10)
 }
 
 extension LinearGradient {
-    /// Metallic white->gray used for big numbers.
+    /// Metallic treatment for big numbers — silver in dark mode, gunmetal in light.
     static let silver = LinearGradient(
-        colors: [Color(hex: 0xFFFFFF), Color(hex: 0xC9C9D1), Color(hex: 0x86868F)],
+        colors: [
+            Color(light: 0x17171B, dark: 0xFFFFFF),
+            Color(light: 0x3F3F47, dark: 0xC9C9D1),
+            Color(light: 0x71717A, dark: 0x86868F),
+        ],
         startPoint: .top, endPoint: .bottom
     )
 }
@@ -30,6 +36,20 @@ extension Color {
             blue: Double(hex & 0xFF) / 255,
             opacity: alpha
         )
+    }
+
+    /// A color that resolves per the system appearance.
+    init(light: UInt, dark: UInt, lightAlpha: Double = 1, darkAlpha: Double = 1) {
+        self.init(uiColor: UIColor { traits in
+            let hex = traits.userInterfaceStyle == .dark ? dark : light
+            let alpha = traits.userInterfaceStyle == .dark ? darkAlpha : lightAlpha
+            return UIColor(
+                red: CGFloat((hex >> 16) & 0xFF) / 255,
+                green: CGFloat((hex >> 8) & 0xFF) / 255,
+                blue: CGFloat(hex & 0xFF) / 255,
+                alpha: alpha
+            )
+        })
     }
 }
 

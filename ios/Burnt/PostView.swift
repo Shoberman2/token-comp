@@ -2,17 +2,14 @@ import SwiftUI
 import PhotosUI
 
 struct PostView: View {
-    var onDone: () -> Void
+    var onDone: (Burn) -> Void
     @Environment(\.dismiss) private var dismiss
-
-    @AppStorage("burnt.handle") private var handle = ""
-    @AppStorage("burnt.displayName") private var displayName = ""
-    @AppStorage("burnt.avatar") private var avatar = "🔥"
+    @Environment(AppModel.self) private var appModel
 
     @State private var preview: UIImage?
     @State private var imageData: Data?
     @State private var tokensText = ""
-    @State private var model = "Claude Opus 4.8"
+    @State private var selectedModel = "Claude Opus 4.8"
     @State private var caption = ""
 
     @State private var showSourceDialog = false
@@ -25,7 +22,7 @@ struct PostView: View {
 
     private var tokens: Int { Int(tokensText.filter(\.isNumber)) ?? 0 }
     private var canSubmit: Bool {
-        imageData != nil && tokens > 0 && !handle.trimmingCharacters(in: .whitespaces).isEmpty && !submitting
+        imageData != nil && tokens > 0 && appModel.isAuthenticated && !submitting
     }
 
     var body: some View {
@@ -39,7 +36,6 @@ struct PostView: View {
                         tokensField
                         modelField
                         captionField
-                        identityCard
                         if let error { errorBanner(error) }
                         submitButton
                         streakNote
@@ -66,6 +62,18 @@ struct PostView: View {
                     setImage(img)
                 }
             }
+        }
+        .task {
+            selectedModel = appModel.profile?.defaultModel ?? appModel.models.first ?? "Other"
+            #if DEBUG
+            let env = ProcessInfo.processInfo.environment
+            if env["BURNT_DEMO_ACCOUNT"] == "1", env["BURNT_PRESENT"] == "post", preview == nil {
+                setImage(DemoFixtures.usageScreenshot())
+                tokensText = "38,400,000"
+                selectedModel = "Claude Opus 4.8"
+                caption = "Shipped the new collaborative canvas today."
+            }
+            #endif
         }
     }
 
@@ -144,7 +152,7 @@ struct PostView: View {
             .glass(radius: 16)
             Text(tokens > 0
                  ? "That's \(compact(tokens)) tokens · ~\(usd(estimateCost(tokens))) spent"
-                 : "Read it off your Claude usage screen.")
+                 : "Use the number from your AI usage screen.")
                 .font(.caption).foregroundStyle(Palette.fog)
         }
     }
@@ -155,7 +163,9 @@ struct PostView: View {
                 fieldLabel("Model")
                 Text("· tracked, not ranked").font(.system(size: 10)).foregroundStyle(Palette.dim)
             }
-            FlowChips(items: kModels, selected: model) { model = $0 }
+            FlowChips(items: Array(appModel.models.prefix(16)), selected: selectedModel) {
+                selectedModel = $0
+            }
         }
     }
 
@@ -168,44 +178,6 @@ struct PostView: View {
                 .padding(.horizontal, 16).padding(.vertical, 12)
                 .glass(radius: 16)
         }
-    }
-
-    private var identityCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("YOUR IDENTITY").font(.caption).tracking(1).foregroundStyle(Palette.dim)
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 6), spacing: 6) {
-                ForEach(kAvatars, id: \.self) { a in
-                    Button { avatar = a } label: {
-                        Text(a).font(.system(size: 18))
-                            .frame(width: 38, height: 38)
-                            .background(avatar == a ? Palette.ash : Palette.ash.opacity(0.5), in: Circle())
-                            .overlay {
-                                if avatar == a {
-                                    Circle().strokeBorder(Palette.bone, lineWidth: 2)
-                                }
-                            }
-                    }
-                }
-            }
-            HStack(spacing: 8) {
-                HStack(spacing: 2) {
-                    Text("@").foregroundStyle(Palette.fog)
-                    TextField("", text: $handle, prompt: Text("handle").foregroundStyle(Palette.smoke))
-                        .textInputAutocapitalization(.never).autocorrectionDisabled()
-                        .onChange(of: handle) { _, v in
-                            handle = v.lowercased().filter { $0.isLetter || $0.isNumber || $0 == "_" }
-                        }
-                }
-                .padding(.horizontal, 12).padding(.vertical, 10)
-                .background(Palette.ink.opacity(0.6), in: RoundedRectangle(cornerRadius: 12))
-                TextField("", text: $displayName, prompt: Text("Display name").foregroundStyle(Palette.smoke))
-                    .padding(.horizontal, 12).padding(.vertical, 10)
-                    .background(Palette.ink.opacity(0.6), in: RoundedRectangle(cornerRadius: 12))
-            }
-            .font(.system(size: 14)).foregroundStyle(Palette.bone)
-        }
-        .padding(16)
-        .glass(radius: 18)
     }
 
     private var submitButton: some View {
@@ -258,18 +230,16 @@ struct PostView: View {
     private func submit() async {
         guard let imageData else { error = "Add a screenshot of your usage first."; return }
         guard tokens > 0 else { error = "Enter how many tokens you burned."; return }
-        let h = handle.trimmingCharacters(in: .whitespaces)
-        guard !h.isEmpty else { error = "Pick a handle so you can be ranked."; return }
+        guard appModel.isAuthenticated else { error = "Sign in before posting."; return }
 
         submitting = true; error = nil
         do {
-            try await API.post(NewBurn(
+            let burn = try await API.post(NewBurn(
                 image: imageData, imageType: "image/jpeg", tokens: tokens,
-                handle: h, displayName: displayName.isEmpty ? h : displayName,
-                avatar: avatar, model: model, caption: caption, cost: nil
+                model: selectedModel, caption: caption, cost: nil
             ))
             submitting = false
-            onDone()
+            onDone(burn)
         } catch {
             self.error = error.localizedDescription
             submitting = false

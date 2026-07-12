@@ -30,11 +30,13 @@ struct LeaderboardView: View {
     }
 
     private var header: some View {
-        VStack(spacing: 8) {
-            (Text("Who's ").foregroundStyle(Palette.bone)
-             + Text("the most Burnt?").foregroundStyle(Palette.fog))
-                .font(.display(32, .bold))
-                .multilineTextAlignment(.center)
+        HStack(alignment: .bottom) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Leaderboard").font(.display(26, .bold)).foregroundStyle(Palette.bone)
+                Text("Ranked by verified token usage posts")
+                    .font(.subheadline).foregroundStyle(Palette.fog)
+            }
+            Spacer()
         }
         .padding(.top, 6)
     }
@@ -113,7 +115,7 @@ private struct Podium: View {
                                    startPoint: .bottom, endPoint: .top)
                     VStack(alignment: .leading, spacing: 2) {
                         HStack(spacing: 5) {
-                            Text(e.avatar).font(.system(size: 15))
+                            AvatarView(name: e.displayName, source: e.avatar, size: 18)
                             Text(e.displayName).font(.system(size: 13, weight: .semibold))
                                 .foregroundStyle(Palette.bone).lineLimit(1)
                         }
@@ -139,7 +141,7 @@ private struct Podium: View {
     }
 
     private func burnStub(_ e: RankEntry) -> Burn {
-        Burn(id: e.handle, handle: e.handle, displayName: e.displayName, avatar: e.avatar,
+        Burn(id: e.handle, handle: e.handle, displayName: e.displayName, avatar: e.avatar, avatarUrl: nil,
              tokens: e.topBurn, cost: nil, model: e.model, imageUrl: e.imageUrl,
              caption: nil, createdAt: e.lastBurnAt)
     }
@@ -172,7 +174,7 @@ private struct RankRow: View {
                 .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(Palette.line))
             VStack(alignment: .leading, spacing: 1) {
                 HStack(spacing: 5) {
-                    Text(entry.avatar).font(.system(size: 14))
+                    AvatarView(name: entry.displayName, source: entry.avatar, size: 18)
                     Text(entry.displayName).font(.system(size: 14, weight: .semibold)).foregroundStyle(Palette.bone)
                 }
                 HStack(spacing: 8) {
@@ -198,7 +200,7 @@ private struct RankRow: View {
     }
 
     private func burnStub(_ e: RankEntry) -> Burn {
-        Burn(id: e.handle, handle: e.handle, displayName: e.displayName, avatar: e.avatar,
+        Burn(id: e.handle, handle: e.handle, displayName: e.displayName, avatar: e.avatar, avatarUrl: nil,
              tokens: e.topBurn, cost: nil, model: e.model, imageUrl: e.imageUrl,
              caption: nil, createdAt: e.lastBurnAt)
     }

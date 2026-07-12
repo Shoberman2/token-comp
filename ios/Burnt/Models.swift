@@ -5,6 +5,7 @@ struct Burn: Codable, Identifiable, Hashable {
     let handle: String
     let displayName: String
     let avatar: String
+    let avatarUrl: String?
     let tokens: Int
     let cost: Double?
     let model: String?
@@ -30,10 +31,37 @@ struct RankEntry: Codable, Identifiable, Hashable {
 
 struct Me: Codable {
     let handle: String
+    let displayName: String?
+    let avatarUrl: String?
     let streak: Int
     let postedToday: Bool
     let posts: Int
     let totalTokens: Int
+    let bestDayTokens: Int
+    let bestDayDate: String?
+}
+
+struct UserProfile: Codable, Identifiable {
+    let id: String?
+    let handle: String
+    let displayName: String
+    let company: String?
+    let avatarUrl: String?
+    let bio: String?
+    let website: String?
+    let defaultModel: String?
+    let joinCode: String?
+    let streak: Int
+    let postedToday: Bool
+    let posts: Int
+    let totalTokens: Int
+    let bestBurn: Int
+    let bestDayTokens: Int
+    let bestDayDate: String?
+    let followers: Int
+    let following: Int
+    let rank: Int?
+    let burns: [Burn]
 }
 
 struct Stats: Codable {
@@ -51,6 +79,29 @@ struct FeedResponse: Codable {
     let burns: [Burn]
 }
 
+struct ProfileResponse: Codable {
+    let profile: UserProfile?
+}
+
+struct ModelsResponse: Codable {
+    let models: [String]
+}
+
+struct AuthSession: Codable, Sendable {
+    let accessToken: String
+    let refreshToken: String
+    let expiresAt: Int?
+}
+
+struct AuthResponse: Codable {
+    let session: AuthSession?
+    let requiresEmailConfirmation: Bool?
+}
+
+struct AvatarResponse: Codable {
+    let avatarUrl: String
+}
+
 enum Timeframe: String, CaseIterable, Identifiable {
     case day, week, month, all
     var id: String { rawValue }
@@ -65,11 +116,10 @@ enum Timeframe: String, CaseIterable, Identifiable {
 }
 
 let kModels = [
-    "Claude Opus 4.8", "Claude Sonnet 5", "Claude Haiku 4.5",
-    "Claude Code", "Other",
+    "Claude Opus 4.8", "Claude Sonnet 5", "Claude Haiku 4.5", "Claude Code",
+    "GPT-5", "GPT-5 mini", "GPT-4.1", "GPT-4o", "o3", "o4-mini",
+    "Gemini 3 Pro", "Gemini 3 Flash", "Grok 4", "Llama 4", "DeepSeek V3", "Other",
 ]
-
-let kAvatars = ["🔥", "👑", "🐋", "🦖", "⚡", "🧠", "🌙", "🚀", "💎", "🌀", "🤖", "🧊"]
 
 // MARK: - Formatting (mirrors the web app)
 
