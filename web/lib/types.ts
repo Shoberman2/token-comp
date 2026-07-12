@@ -86,7 +86,7 @@ export type Suggestion = {
   displayName: string;
   totalTokens: number;
   posts: number;
-  imageUrl: string | null;
+  avatarUrl: string | null;
 };
 
 export const RANGES: { key: Range; label: string; short: string }[] = [

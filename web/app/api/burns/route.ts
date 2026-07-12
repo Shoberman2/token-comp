@@ -1,10 +1,19 @@
 import { NextResponse } from "next/server";
 import { createBurn, listBurns } from "@/lib/store";
 import { saveImage } from "@/lib/storage";
-import { createServerSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { getAuthenticatedRequest, isSupabaseConfigured } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+const ALLOWED_IMAGE_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "image/heic",
+  "image/heif",
+]);
 
 export async function GET() {
   const burns = await listBurns(100);
@@ -19,13 +28,9 @@ export async function POST(req: Request) {
     );
   }
 
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-    error: userError,
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null }, error: null };
+  const { supabase, user } = await getAuthenticatedRequest(req);
 
-  if (userError || !user) {
+  if (!supabase || !user) {
     return NextResponse.json({ error: "Sign in before posting a burn." }, { status: 401 });
   }
 
@@ -56,17 +61,33 @@ export async function POST(req: Request) {
   if (image.size > 12 * 1024 * 1024) {
     return NextResponse.json({ error: "Image is too large (max 12MB)." }, { status: 413 });
   }
+  if (!ALLOWED_IMAGE_TYPES.has(image.type)) {
+    return NextResponse.json(
+      { error: "Use a JPG, PNG, WebP, GIF, HEIC, or HEIF image." },
+      { status: 415 }
+    );
+  }
 
-  const imageUrl = await saveImage(image);
   const costRaw = form.get("cost");
-  const burn = await createBurn({
-    userId: user.id,
-    tokens,
-    cost: costRaw != null && costRaw !== "" ? Number(costRaw) : undefined,
-    model: String(form.get("model") || "").trim() || undefined,
-    imageUrl,
-    caption: String(form.get("caption") || "").trim() || undefined,
-  });
+  const parsedCost = costRaw != null && costRaw !== "" ? Number(costRaw) : undefined;
 
-  return NextResponse.json({ burn }, { status: 201 });
+  try {
+    const imageUrl = await saveImage(image, user.id, supabase);
+    const burn = await createBurn(
+      {
+        userId: user.id,
+        tokens,
+        cost: parsedCost != null && Number.isFinite(parsedCost) ? parsedCost : undefined,
+        model: String(form.get("model") || "").trim() || undefined,
+        imageUrl,
+        caption: String(form.get("caption") || "").trim() || undefined,
+      },
+      supabase
+    );
+
+    return NextResponse.json({ burn }, { status: 201 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Could not post this burn.";
+    return NextResponse.json({ error: message }, { status: 400 });
+  }
 }

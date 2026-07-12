@@ -6,7 +6,11 @@ import {
   normalizeHandle,
   updateProfileForUser,
 } from "@/lib/social";
-import { createServerSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import {
+  getAuthenticatedRequest,
+  isSupabaseConfigured,
+  type ServerSupabaseClient,
+} from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,16 +19,15 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
   let handle = normalizeHandle(url.searchParams.get("handle") || "");
   let viewerId: string | null = null;
+  let requestClient: ServerSupabaseClient | null = null;
 
   if (isSupabaseConfigured()) {
-    const supabase = await createServerSupabaseClient();
-    const {
-      data: { user },
-    } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+    const { supabase, user } = await getAuthenticatedRequest(req);
+    requestClient = supabase;
     viewerId = user?.id ?? null;
 
     if (!handle && user?.id) {
-      const self = await getUserById(user.id);
+      const self = await getUserById(user.id, supabase);
       handle = self?.handle ?? "";
     }
   }
@@ -36,7 +39,9 @@ export async function GET(req: Request) {
   const p = await profile(handle);
   if (!p.id && p.posts === 0) return NextResponse.json({ error: "Profile not found." }, { status: 404 });
 
-  const following = viewerId ? await isFollowingUserId(viewerId, handle) : false;
+  const following = viewerId
+    ? await isFollowingUserId(viewerId, handle, requestClient)
+    : false;
   return NextResponse.json({ profile: p, isFollowing: following, isSelf: viewerId === p.id });
 }
 
@@ -48,13 +53,9 @@ export async function PATCH(req: Request) {
     );
   }
 
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-    error: userError,
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null }, error: null };
+  const { supabase, user } = await getAuthenticatedRequest(req);
 
-  if (userError || !user) {
+  if (!supabase || !user) {
     return NextResponse.json({ error: "Sign in before editing your profile." }, { status: 401 });
   }
 
@@ -71,15 +72,19 @@ export async function PATCH(req: Request) {
   }
 
   try {
-    const userProfile = await updateProfileForUser(user.id, {
-      handle,
-      displayName,
-      company: String(body.company || ""),
-      avatarUrl: String(body.avatarUrl || ""),
-      bio: String(body.bio || ""),
-      website: String(body.website || ""),
-      defaultModel: String(body.defaultModel || ""),
-    });
+    const userProfile = await updateProfileForUser(
+      user.id,
+      {
+        handle,
+        displayName,
+        company: String(body.company || ""),
+        avatarUrl: String(body.avatarUrl || ""),
+        bio: String(body.bio || ""),
+        website: String(body.website || ""),
+        defaultModel: String(body.defaultModel || ""),
+      },
+      supabase
+    );
     return NextResponse.json({ profile: userProfile });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Could not save profile.";

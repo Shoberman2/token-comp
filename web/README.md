@@ -1,6 +1,6 @@
 # Burnt Web
 
-Next.js app for verified AI token usage posts. Users sign up with Supabase Auth, keep public profiles with company/avatar information, post daily token usage screenshots, and share join links.
+Next.js app and API for verified AI token usage posts. It powers both the web experience and the native iOS app, including account sessions, profiles, posting, follows, and personalized feeds.
 
 ## Supabase Setup
 
@@ -21,13 +21,13 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
 
 `NEXT_PUBLIC_SUPABASE_ANON_KEY` is also supported as a fallback key name.
 
-The migration creates:
+The migrations create:
 
 - `profiles` linked to `auth.users`
 - `burns` for token usage posts
 - `follows` for the social graph
 - `ai_models` for built-in and newly observed model names
-- public avatar storage bucket and RLS policies
+- public avatar and burn-screenshot storage buckets with owner-scoped RLS policies
 - public best-token-day views for shareable profile stats
 
 ## Development

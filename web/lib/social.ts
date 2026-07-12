@@ -1,6 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { createServerSupabaseClient, isSupabaseConfigured } from "./supabase/server";
+import type { ServerSupabaseClient } from "./supabase/server";
 import type { Database } from "./supabase/types";
 import type { User } from "./types";
 
@@ -30,6 +31,18 @@ async function writeColl<T>(file: string, data: T[]): Promise<void> {
 
 export function normalizeHandle(handle: string): string {
   return handle.trim().replace(/^@+/, "").toLowerCase().replace(/[^a-z0-9_]/g, "").slice(0, 24);
+}
+
+function normalizeWebsite(value: string | null | undefined): string | null {
+  const raw = value?.trim().slice(0, 200) ?? "";
+  if (!raw) return null;
+
+  try {
+    const url = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
+    return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
 }
 
 export function rowToUser(row: ProfileRow): User {
@@ -95,11 +108,14 @@ export async function upsertUser(handle: string, displayName: string): Promise<U
   return user;
 }
 
-export async function getUser(handle: string): Promise<User | undefined> {
+export async function getUser(
+  handle: string,
+  client?: ServerSupabaseClient | null
+): Promise<User | undefined> {
   const h = normalizeHandle(handle);
 
   if (isSupabaseConfigured()) {
-    const supabase = await createServerSupabaseClient();
+    const supabase = client ?? (await createServerSupabaseClient());
     if (!supabase || !h) return undefined;
 
     const { data, error } = await supabase.from("profiles").select("*").eq("handle", h).maybeSingle();
@@ -110,10 +126,13 @@ export async function getUser(handle: string): Promise<User | undefined> {
   return (await listUsers()).find((u) => u.handle === h);
 }
 
-export async function getUserById(id: string): Promise<User | undefined> {
+export async function getUserById(
+  id: string,
+  client?: ServerSupabaseClient | null
+): Promise<User | undefined> {
   if (!isSupabaseConfigured()) return undefined;
 
-  const supabase = await createServerSupabaseClient();
+  const supabase = client ?? (await createServerSupabaseClient());
   if (!supabase) return undefined;
 
   const { data, error } = await supabase.from("profiles").select("*").eq("id", id).maybeSingle();
@@ -153,13 +172,14 @@ export async function updateProfileForUser(
     bio?: string | null;
     website?: string | null;
     defaultModel?: string | null;
-  }
+  },
+  client?: ServerSupabaseClient | null
 ): Promise<User> {
   if (!isSupabaseConfigured()) {
     throw new Error("Supabase is not configured.");
   }
 
-  const supabase = await createServerSupabaseClient();
+  const supabase = client ?? (await createServerSupabaseClient());
   if (!supabase) throw new Error("Supabase is not configured.");
 
   const { data, error } = await supabase
@@ -170,7 +190,7 @@ export async function updateProfileForUser(
       company: input.company?.trim().slice(0, 120) || null,
       avatar_url: input.avatarUrl?.trim() || null,
       bio: input.bio?.trim().slice(0, 220) || null,
-      website: input.website?.trim().slice(0, 200) || null,
+      website: normalizeWebsite(input.website),
       default_model: input.defaultModel?.trim().slice(0, 120) || null,
     })
     .eq("id", userId)
@@ -253,12 +273,16 @@ export async function isFollowing(follower: string, following: string): Promise<
   return (await listFollows()).some((f) => f.follower === a && f.following === b);
 }
 
-export async function isFollowingUserId(followerId: string | null | undefined, following: string): Promise<boolean> {
+export async function isFollowingUserId(
+  followerId: string | null | undefined,
+  following: string,
+  client?: ServerSupabaseClient | null
+): Promise<boolean> {
   if (!followerId) return false;
-  const target = await getUser(following);
+  const target = await getUser(following, client);
   if (!target?.id) return false;
 
-  const supabase = await createServerSupabaseClient();
+  const supabase = client ?? (await createServerSupabaseClient());
   if (!supabase) return false;
 
   const { data, error } = await supabase
@@ -295,14 +319,19 @@ export async function setFollow(follower: string, following: string, on: boolean
   }
 }
 
-export async function setFollowByUserId(followerId: string, following: string, on: boolean): Promise<void> {
+export async function setFollowByUserId(
+  followerId: string,
+  following: string,
+  on: boolean,
+  client?: ServerSupabaseClient | null
+): Promise<void> {
   if (!isSupabaseConfigured()) throw new Error("Supabase is not configured.");
 
-  const target = await getUser(following);
+  const target = await getUser(following, client);
   if (!target?.id) throw new Error("User not found.");
   if (target.id === followerId) return;
 
-  const supabase = await createServerSupabaseClient();
+  const supabase = client ?? (await createServerSupabaseClient());
   if (!supabase) throw new Error("Supabase is not configured.");
 
   if (on) {

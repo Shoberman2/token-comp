@@ -12,6 +12,7 @@ import {
   upsertUser,
 } from "./social";
 import { createServerSupabaseClient, isSupabaseConfigured } from "./supabase/server";
+import type { ServerSupabaseClient } from "./supabase/server";
 import type { Database } from "./supabase/types";
 import type { Burn, Me, Profile, Range, RankEntry, Suggestion } from "./types";
 import { rangeWindowMs } from "./types";
@@ -114,17 +115,42 @@ export async function listBurns(limit = 200): Promise<Burn[]> {
   return [...all].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt)).slice(0, limit);
 }
 
-export async function createBurn(input: NewBurn): Promise<Burn> {
+/** A single public burn. Burn rows and their author profiles are readable under
+ * the public RLS policies, so shared links do not require an account. */
+export async function getBurn(id: string): Promise<Burn | null> {
+  const burnId = id.trim();
+  if (!burnId) return null;
+
+  if (isSupabaseConfigured()) {
+    const supabase = await createServerSupabaseClient();
+    if (!supabase) return null;
+
+    const { data, error } = await supabase.from("burns").select("*").eq("id", burnId).maybeSingle();
+    if (error) throw error;
+    if (!data) return null;
+
+    const profileMap = await profilesById([data.user_id]);
+    return rowToBurn(data, profileMap.get(data.user_id));
+  }
+
+  const burns = await readJson();
+  return burns.find((burn) => burn.id === burnId) ?? null;
+}
+
+export async function createBurn(
+  input: NewBurn,
+  client?: ServerSupabaseClient | null
+): Promise<Burn> {
   const tokens = Math.max(0, Math.round(input.tokens));
   const model = normalizeModelName(input.model);
 
   if (isSupabaseConfigured()) {
     if (!input.userId) throw new Error("Sign in before posting a burn.");
 
-    const supabase = await createServerSupabaseClient();
+    const supabase = client ?? (await createServerSupabaseClient());
     if (!supabase) throw new Error("Supabase is not configured.");
 
-    const profile = await getUserById(input.userId);
+    const profile = await getUserById(input.userId, supabase);
     if (!profile?.id) throw new Error("Finish your profile before posting.");
 
     const { data: recordedModel, error: modelError } = await supabase.rpc("record_ai_model", {
@@ -350,7 +376,7 @@ export async function discover(handle: string, limit = 20): Promise<Suggestion[]
         displayName: b.displayName,
         totalTokens: b.tokens,
         posts: 1,
-        imageUrl: b.imageUrl,
+        avatarUrl: b.avatarUrl ?? null,
       });
     } else {
       cur.totalTokens += b.tokens;
@@ -366,7 +392,7 @@ export async function discover(handle: string, limit = 20): Promise<Suggestion[]
       displayName: u.displayName,
       totalTokens: 0,
       posts: 0,
-      imageUrl: u.avatarUrl ?? null,
+      avatarUrl: u.avatarUrl ?? null,
     });
   }
 

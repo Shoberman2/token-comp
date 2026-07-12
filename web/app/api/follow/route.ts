@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { setFollowByUserId } from "@/lib/social";
-import { createServerSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { getAuthenticatedRequest, isSupabaseConfigured } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,13 +10,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Supabase is not configured." }, { status: 501 });
   }
 
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-    error: userError,
-  } = supabase ? await supabase.auth.getUser() : { data: { user: null }, error: null };
+  const { supabase, user } = await getAuthenticatedRequest(req);
 
-  if (userError || !user) {
+  if (!supabase || !user) {
     return NextResponse.json({ error: "Sign in before following people." }, { status: 401 });
   }
 
@@ -27,6 +23,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "following required" }, { status: 400 });
   }
 
-  await setFollowByUserId(user.id, following, on);
+  await setFollowByUserId(user.id, following, on, supabase);
   return NextResponse.json({ ok: true, following: on });
 }
