@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Burnt flyer — explainer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&display=swap');
+  @page { size: letter; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 8.5in; height: 11in; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: radial-gradient(120% 65% at 50% -12%, #232329, #0b0b0d 62%);
+    color: #fafafa;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 0.55in 0.6in 0.45in;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand .word {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 38px;
+    letter-spacing: -0.02em;
+    background: linear-gradient(180deg, #ffffff 0%, #c9c9d1 60%, #9a9aa2 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  h1 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: 56px; line-height: 1.04; letter-spacing: -0.025em;
+    text-align: center; text-transform: uppercase;
+    margin-top: 0.3in;
+    background: linear-gradient(180deg, #ffffff 0%, #cdcdd5 55%, #83838c 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .what {
+    margin-top: 0.22in; text-align: center; color: #a9a9b1;
+    font-size: 17.5px; line-height: 1.55; max-width: 6.6in;
+  }
+  .what b { color: #fafafa; font-weight: 600; }
+  .steps {
+    margin-top: 0.3in; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px;
+    width: 100%;
+  }
+  .step {
+    border: 1px solid rgba(255,255,255,0.14); border-radius: 18px;
+    padding: 18px 16px; background: rgba(255,255,255,0.03);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .step .n {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px;
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: #fafafa; color: #0b0b0d;
+  }
+  .step .t {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px;
+    color: #fafafa; letter-spacing: -0.01em;
+  }
+  .step .d { font-size: 13.5px; line-height: 1.5; color: #a9a9b1; }
+  .bottom {
+    margin-top: 0.32in; display: flex; align-items: center; gap: 0.4in;
+    width: 100%; justify-content: center;
+  }
+  .qr-tile {
+    background: #ffffff; border-radius: 22px; padding: 20px 20px 14px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.14), 0 30px 80px -30px rgba(0,0,0,0.9);
+  }
+  .qr-wrap { position: relative; width: 2.35in; height: 2.35in; }
+  .qr-wrap img { width: 100%; height: 100%; display: block; }
+  .qr-badge {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 0.44in; height: 0.44in; background: #ffffff; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .scan {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    color: #0b0b0d; font-size: 16px;
+  }
+  .beside { display: flex; flex-direction: column; gap: 12px; max-width: 3.1in; }
+  .beside .cta {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 26px;
+    line-height: 1.15; letter-spacing: -0.015em; color: #fafafa;
+  }
+  .beside .free { font-size: 14.5px; line-height: 1.55; color: #a9a9b1; }
+  .beside .url {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 15px; color: #8b8b93; letter-spacing: 0.02em;
+  }
+  .foot {
+    margin-top: auto; display: flex; align-items: center; gap: 12px;
+    color: #6d6d75; font-size: 13px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .dot { width: 4px; height: 4px; border-radius: 50%; background: #4a4a52; }
+</style>
+</head>
+<body>
+
+  <div class="brand">
+    <svg width="56" height="56" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="rim" x1="32" y1="6" x2="32" y2="58" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#ffffff"/><stop offset="1" stop-color="#84848d"/>
+        </linearGradient>
+        <linearGradient id="spark" x1="32" y1="16" x2="32" y2="48" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#ffffff"/><stop offset="1" stop-color="#9a9aa2"/>
+        </linearGradient>
+      </defs>
+      <circle cx="32" cy="32" r="24" fill="#141419" stroke="url(#rim)" stroke-width="2.8"/>
+      <circle cx="32" cy="32" r="19.8" fill="none" stroke="url(#rim)" stroke-opacity="0.45" stroke-width="1.5" stroke-dasharray="2.4 13.15" stroke-dashoffset="1.2"/>
+      <path d="M32 17.8c1.75 8.4 5.15 11.8 13.3 14.2-8.15 2.4-11.55 5.8-13.3 14.2-1.75-8.4-5.15-11.8-13.3-14.2 8.15-2.4 11.55-5.8 13.3-14.2Z" fill="url(#spark)"/>
+    </svg>
+    <span class="word">Burnt</span>
+  </div>
+
+  <h1>How many tokens did&nbsp;you burn today?</h1>
+
+  <p class="what">
+    Every builder in SF is running Claude, GPT, and Gemini all day — but nobody sees the scoreboard.
+    <b>Burnt is the daily leaderboard for AI usage.</b> Post a screenshot of your token count,
+    build a streak, and find out who's really shipping.
+  </p>
+
+  <div class="steps">
+    <div class="step">
+      <span class="n">1</span>
+      <span class="t">Screenshot your usage</span>
+      <span class="d">Grab your token count from Claude Code, Cursor, the API console — any AI tool you burn tokens in.</span>
+    </div>
+    <div class="step">
+      <span class="n">2</span>
+      <span class="t">Post your burn</span>
+      <span class="d">One post a day keeps your streak alive. Add the model and what you were building.</span>
+    </div>
+    <div class="step">
+      <span class="n">3</span>
+      <span class="t">Out-burn your friends</span>
+      <span class="d">Climb the daily leaderboard, invite friends, nudge them when they haven't posted, and rep your org.</span>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="qr-tile">
+      <div class="qr-wrap">
+        <img src="qr.svg" alt="QR code to burnt-delta.vercel.app">
+        <div class="qr-badge">
+          <svg width="34" height="34" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="26" fill="#0b0b0d"/>
+            <path d="M32 15c2.1 10.1 6.2 14.2 16 16.7-9.8 2.5-13.9 6.6-16 16.7-2.1-10.1-6.2-14.2-16-16.7 9.8-2.5 13.9-6.6 16-16.7Z" fill="#ffffff"/>
+          </svg>
+        </div>
+      </div>
+      <div class="scan">Scan to join</div>
+    </div>
+    <div class="beside">
+      <div class="cta">Free. Takes 60&nbsp;seconds to post your first burn.</div>
+      <div class="free">No follower counts to grind, no algorithm — just you, your tokens, and the leaderboard.</div>
+      <div class="url">burnt-delta.vercel.app</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>Web + iPhone</span><span class="dot"></span>
+    <span>Free</span><span class="dot"></span>
+    <span>Made in SF</span>
+  </div>
+
+</body>
+</html>
