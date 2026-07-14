@@ -65,15 +65,6 @@ struct PostView: View {
         }
         .task {
             selectedModel = appModel.profile?.defaultModel ?? appModel.models.first ?? "Other"
-            #if DEBUG
-            let env = ProcessInfo.processInfo.environment
-            if env["BURNT_DEMO_ACCOUNT"] == "1", env["BURNT_PRESENT"] == "post", preview == nil {
-                setImage(DemoFixtures.usageScreenshot())
-                tokensText = "38,400,000"
-                selectedModel = "Claude Opus 4.8"
-                caption = "Shipped the new collaborative canvas today."
-            }
-            #endif
         }
     }
 

@@ -21,7 +21,6 @@
 		D045B72CC43A573CBDEAC593 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64FB3C58284A317C7ED03D80 /* AccountView.swift */; };
 		DAE710C424EE7D58DD32B559 /* BurntApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5B04906036B63E8084D26F /* BurntApp.swift */; };
 		EF8B9BF9889FF37553482213 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370FF716A488207FC161E34F /* RootView.swift */; };
-		F7012B1518F0C0EB1663A90E /* DemoFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9047180E77C00E99707D4B51 /* DemoFixtures.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,7 +36,6 @@
 		857D48CCAE8D382E72AC65CE /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		8DF35ED9B02DC24A36FC6AF2 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		8E5B04906036B63E8084D26F /* BurntApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BurntApp.swift; sourceTree = "<group>"; };
-		9047180E77C00E99707D4B51 /* DemoFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoFixtures.swift; sourceTree = "<group>"; };
 		B07E1864D257036AE5817665 /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
 		DECDD5F67B94089626C697E9 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
 		E0AB2C3C4FF6C126513ABE6E /* LeaderboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardView.swift; sourceTree = "<group>"; };
@@ -54,7 +52,6 @@
 				8E5B04906036B63E8084D26F /* BurntApp.swift */,
 				B07E1864D257036AE5817665 /* CameraPicker.swift */,
 				18BBCEC8566D5EB0B516FDC5 /* Components.swift */,
-				9047180E77C00E99707D4B51 /* DemoFixtures.swift */,
 				2ECCEDF2FAE63105B129B5F8 /* FeedView.swift */,
 				0050648D14F9875C2D7C989B /* Info.plist */,
 				E0AB2C3C4FF6C126513ABE6E /* LeaderboardView.swift */,
@@ -154,7 +151,6 @@
 				DAE710C424EE7D58DD32B559 /* BurntApp.swift in Sources */,
 				4C676BEDEBAD77C75D8787FF /* CameraPicker.swift in Sources */,
 				09CB0404668E7B550A0FD199 /* Components.swift in Sources */,
-				F7012B1518F0C0EB1663A90E /* DemoFixtures.swift in Sources */,
 				AF37E191DC4DA20C30DD7C61 /* FeedView.swift in Sources */,
 				5EEC45143134CF465CD2B73D /* LeaderboardView.swift in Sources */,
 				8FC35AD40C47D13AB33492CA /* Models.swift in Sources */,

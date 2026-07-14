@@ -118,7 +118,7 @@ struct StreakBadge: View {
     }
 }
 
-// MARK: - Burn image (handles blob URLs, base64, and SVG-seed fallbacks)
+// MARK: - Burn image (handles remote URLs, base64, and load-failure fallbacks)
 
 struct BurnImageView: View {
     let burn: Burn
@@ -156,13 +156,13 @@ struct BurnImageView: View {
                     }
                 }
             } else {
-                fallback   // SVG seed data URIs land here
+                fallback
             }
         }
     }
 }
 
-/// Scalable mini bar-chart thumbnail — the compact fallback for seed images.
+/// Scalable mini bar-chart thumbnail — the compact fallback when no image renders.
 struct MiniUsage: View {
     private let bars: [CGFloat] = [0.35, 0.5, 0.42, 0.68, 0.85, 0.6, 1.0]
     var body: some View {

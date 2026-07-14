@@ -21,19 +21,7 @@ final class AppModel {
 
     var isAuthenticated: Bool { profile != nil }
 
-    private var isDemo: Bool {
-        #if DEBUG
-        ProcessInfo.processInfo.environment["BURNT_DEMO_ACCOUNT"] == "1"
-        #else
-        false
-        #endif
-    }
-
     func bootstrap() async {
-        if isDemo {
-            loadDemo()
-            return
-        }
         await loadAccount()
         await loadBoard()
         await loadFeed()
@@ -143,10 +131,6 @@ final class AppModel {
     }
 
     func refreshAll() async {
-        if isDemo {
-            loadDemo()
-            return
-        }
         await loadBoard()
         await loadFeed()
         await loadAccount()
@@ -158,19 +142,5 @@ final class AppModel {
             return "Can’t reach Burnt right now. Check your connection and try again."
         }
         return error.localizedDescription
-    }
-
-    private func loadDemo() {
-        #if DEBUG
-        feed = DemoFixtures.burns
-        entries = DemoFixtures.entries
-        stats = DemoFixtures.stats
-        me = DemoFixtures.me
-        profile = DemoFixtures.profile
-        loadingBoard = false
-        loadingFeed = false
-        loadingAccount = false
-        loadError = nil
-        #endif
     }
 }
