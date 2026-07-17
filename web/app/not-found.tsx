@@ -8,7 +8,7 @@ export default function NotFound() {
         <h1 className="mt-1 font-display text-2xl font-bold">Nothing burning here</h1>
         <p className="mt-1 text-sm text-fog">This page may have moved or the profile no longer exists.</p>
       </div>
-      <Link href="/" className="rounded-(--radius-control) bg-bone px-4 py-2.5 text-sm font-bold text-ink">
+      <Link href="/feed" className="rounded-(--radius-control) bg-bone px-4 py-2.5 text-sm font-bold text-ink">
         Back to the feed
       </Link>
     </div>

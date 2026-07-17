@@ -229,7 +229,7 @@ export function AuthForm({
         </button>
       ) : null}
 
-      <Link href="/" className="text-sm text-fog underline underline-offset-4">
+      <Link href="/feed" className="text-sm text-fog underline underline-offset-4">
         Back to feed
       </Link>
     </div>

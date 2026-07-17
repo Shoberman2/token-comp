@@ -66,7 +66,7 @@ export default async function BurnPage({ params, searchParams }: BurnPageProps) 
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-dim">Daily burn</p>
           <h1 className="mt-1 font-display text-2xl font-bold">Shared by @{burn.handle}</h1>
         </div>
-        <Link href="/" className="text-xs font-semibold text-fog underline underline-offset-4">
+        <Link href="/feed" className="text-xs font-semibold text-fog underline underline-offset-4">
           See the feed
         </Link>
       </header>

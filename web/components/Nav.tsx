@@ -10,7 +10,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import type { Profile } from "@/lib/types";
 
 const links = [
-  { href: "/", label: "Feed", icon: <Home size={20} /> },
+  { href: "/feed", label: "Feed", icon: <Home size={20} /> },
   { href: "/leaderboard", label: "Ranks", icon: <Trophy size={20} /> },
   { href: "/post", label: "Post", icon: <Plus size={20} /> },
   { href: "/profile", label: "Profile", icon: <User size={20} /> },
@@ -99,7 +99,6 @@ export function Nav() {
 }
 
 function isActive(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
   if (href === "/profile") return pathname === "/profile" || pathname.startsWith("/u/");
   return pathname === href;
 }

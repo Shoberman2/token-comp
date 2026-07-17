@@ -148,7 +148,7 @@ function EmptyState({ title, sub }: { title: string; sub: string }) {
         <p className="font-display text-lg font-bold">{title}</p>
         <p className="mt-1 text-sm text-fog">{sub}</p>
       </div>
-      <Link href="/" className="text-sm font-semibold text-bone underline underline-offset-4">
+      <Link href="/feed" className="text-sm font-semibold text-bone underline underline-offset-4">
         Back to the feed
       </Link>
     </div>
