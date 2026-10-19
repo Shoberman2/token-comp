@@ -1,0 +1,23 @@
+{
+  "platform": "Product Hunt",
+  "generatedAt": "2026-07-17T23:28:26.869Z",
+  "gallerySize": "1270x760",
+  "thumbnailSize": "240x240",
+  "files": [
+    "01-burnt-cover.png",
+    "02-post-the-proof.png",
+    "03-social-feed.png",
+    "04-token-leaderboard.png",
+    "05-streaks-and-sharing.png",
+    "burnt-product-hunt-thumbnail.png"
+  ],
+  "sourceScreenshots": {
+    "feed": "/Users/shoberman/tokenizer/app-store/screenshots/6.9-inch/01-feed.png",
+    "ranks": "/Users/shoberman/tokenizer/app-store/screenshots/6.9-inch/02-ranks.png",
+    "post": "/Users/shoberman/tokenizer/app-store/screenshots/6.9-inch/03-post.png",
+    "profile": "/Users/shoberman/tokenizer/app-store/screenshots/6.9-inch/04-profile.png",
+    "share": "/Users/shoberman/tokenizer/app-store/screenshots/6.9-inch/05-share.png"
+  },
+  "generatedBackground": "burnt-gallery-background.png",
+  "provenance": "Feature screenshots are preserved from the existing iOS launch assets. Exact text, dimensions, logo, and layouts are composed deterministically. Image generation was used only for the monochrome abstract background."
+}
