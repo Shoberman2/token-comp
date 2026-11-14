@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { TokenMark } from "@/components/Logo";
+import { Analytics } from "@vercel/analytics/next";
 
 const display = Space_Grotesk({
   variable: "--font-space",
@@ -79,6 +80,7 @@ export default function RootLayout({
             <span>Daily AI token tracking</span>
           </div>
         </footer>
+        <Analytics />
       </body>
     </html>
   );
